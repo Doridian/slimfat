@@ -1,4 +1,4 @@
-from structs import CStruct
+from slimfat.structs import CStruct
 
 
 # Definitions in mach-o/fat.h
