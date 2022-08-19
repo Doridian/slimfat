@@ -3,7 +3,7 @@ from os import stat
 
 from slimfat.structs_fat import FatArchStruct, FatHeaderStruct
 from slimfat.structs_mach import MachHeaderBegin
-from slimfat.util import align_int
+from slimfat.util import align_int, executable_opener
 
 def make_fat(output: str, input: list):
     HeaderCls = FatArchStruct
@@ -14,7 +14,7 @@ def make_fat(output: str, input: list):
     header_len = HeaderCls.packsize() * len(input)
 
     file_offsets = {}
-    with open(output, "wb") as outf:
+    with open(output, "wb", opener=executable_opener) as outf:
         outf.write(FatHeaderStruct(endian=endian, magic=HeaderCls.magic(), nfat_arch=len(input)).pack())
         offset = align_int(header_len + outf.tell(), align_bytes)
 

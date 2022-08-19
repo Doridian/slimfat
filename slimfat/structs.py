@@ -26,9 +26,9 @@ class CStruct():
         return f"{self.endian}{self._struct_fmt()}"
 
     def pack(self) -> bytes:
-        return pack(self._struct_fmt_full(), *map(self.__getattribute__, self._struct_vals()))
+        return pack(self._struct_fmt_full(), *map(lambda k : getattr(self, k), self._struct_vals()))
 
     def unpack(self, buf: bytes) -> None:
         vals = self._struct_vals()
         for i, val in enumerate(unpack(self._struct_fmt_full(), buf)):
-            self.__setattr__(vals[i], val)
+            setattr(self, vals[i], val)
