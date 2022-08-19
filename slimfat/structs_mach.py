@@ -1,23 +1,31 @@
-
-from struct import unpack
+from slimfat.structs import CStruct
 
 
 # Defined in mach-o/loader.h
-class MachHeaderBegin():
+class MachHeaderBegin(CStruct):
     magic: int
     cputype: int
     cpusubtype: int
 
-    VALID_MAGICS: list[bytes] = [
+    VALID_MAGICS: list = [
         0xfeedface,
         0xfeedfacf,
     ]
 
-    def __init__(self, buf: bytes) -> None:
-        endian = "<"
+    def _struct_fmt(self) -> str:
+        return "III"
+
+    def _struct_vals(self) -> tuple:
+        return ("magic", "cputype", "cpusubtype")
+
+    def unpack(self, buf: bytes) -> None:
         if buf[0] == 0xfe:
-            endian = ">"
-        self.magic, self.cputype, self.cpusubtype = unpack(f"{endian}III", buf)
+            self.endian = ">"
+        elif buf[3] == 0xfe:
+            self.endian = "<"
+
+        super().unpack(buf)
+
         if self.magic not in self.VALID_MAGICS:
             raise ValueError("Invalid magic")
 

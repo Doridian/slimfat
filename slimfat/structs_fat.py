@@ -1,3 +1,4 @@
+from re import X
 from slimfat.structs import CStruct
 
 
@@ -6,14 +7,15 @@ class FatHeaderStruct(CStruct):
     magic: bytes
     nfat_arch: int
 
-    def __init__(self, endian: str, magic: int, nfat_arch: int) -> None:
-        super().__init__(fmt="II", endian=endian)
-        self.magic = magic
-        self.nfat_arch = nfat_arch
+    @staticmethod
+    def packsize() -> int:
+        return 4 + 4
 
-    def pack(self) -> bytes:
-        return self._pack(self.magic, self.nfat_arch)
+    def _struct_vals(self) -> tuple:
+        return ("magic", "nfat_arch")
 
+    def _struct_fmt(self) -> str:
+        return "II"
 
 class FatArchStructBase(CStruct):
     cputype: int
@@ -22,21 +24,15 @@ class FatArchStructBase(CStruct):
     size: int
     align: int
 
-    def __init__(self, fmt: str, endian: str, cputype: int, cpusubtype: int, offset: int, size: int, align: int) -> None:
-        super().__init__(fmt=f"ii{fmt}", endian=endian)
-        self.cputype = cputype
-        self.cpusubtype = cpusubtype
-        self.offset = offset
-        self.size = size
-        self.align = align
-
     @staticmethod
     def packsize() -> int:
         return 4 + 4
 
-    def _pack(self, *args) -> bytes:
-        return super()._pack(self.cputype, self.cpusubtype, self.offset, self.size, self.align, *args)
+    def _struct_vals(self) -> tuple:
+        return ("cputype", "cpusubtype", "offset", "size", "align")
 
+    def _struct_fmt(self) -> str:
+        return "ii"
 
 class FatArchStruct(FatArchStructBase):
     def __init__(self, **kwargs) -> None:
@@ -50,18 +46,14 @@ class FatArchStruct(FatArchStructBase):
     def magic() -> int:
         return 0xcafebabe
 
-    def pack(self) -> bytes:
-        return self._pack()
+    def _struct_fmt(self) -> str:
+        return f"{super()._struct_fmt()}III"
 
 
 # This class does not seem to work, but it is exactly as defined to my knowledge...
 # objdump, however, recognizes it, so I assume it just isn't implemented just yet
 class FatArch64Struct(FatArchStructBase):
-    reserved: int
-
-    def __init__(self, **kwargs) -> None:
-        super().__init__(fmt="QQII", **kwargs)
-        self.reserved = 0
+    reserved: int = 0
 
     @staticmethod
     def packsize() -> int:
@@ -71,5 +63,8 @@ class FatArch64Struct(FatArchStructBase):
     def magic() -> int:
         return 0xcafebabf
 
-    def pack(self) -> bytes:
-        return self._pack(self.reserved)
+    def _struct_fmt(self) -> str:
+        return f"{super()._struct_fmt()}QQII"
+
+    def _struct_vals(self) -> tuple:
+        return (*super()._struct_vals(), "reserved")

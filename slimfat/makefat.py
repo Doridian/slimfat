@@ -5,7 +5,7 @@ from slimfat.structs_fat import FatArchStruct, FatHeaderStruct
 from slimfat.structs_mach import MachHeaderBegin
 from slimfat.util import align_int
 
-def make_fat(output: str, input: list[str]):
+def make_fat(output: str, input: list):
     HeaderCls = FatArchStruct
     align = 15
     endian = ">"

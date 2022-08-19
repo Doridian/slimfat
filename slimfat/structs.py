@@ -1,10 +1,34 @@
-from struct import pack
+from abc import abstractmethod
+from struct import pack, unpack
 
 class CStruct():
-    fmt: str
+    endian: str
 
-    def __init__(self, fmt: str, endian: str) -> None:
-        self.fmt = f"{endian}{fmt}"
+    VALID_ENDIAN = ["<", ">"]
 
-    def _pack(self, *args) -> bytes:
-        return pack(self.fmt, *args)
+    def __init__(self, endian: str, **kwargs) -> None:
+        if endian not in self.VALID_ENDIAN:
+            raise ValueError("Invalid endianness")
+        self.endian = endian
+
+        for k, v in kwargs:
+            self.__setattr__(k, v)
+
+    @abstractmethod
+    def _struct_vals(self) -> tuple:
+        pass
+
+    @abstractmethod
+    def _struct_fmt(self) -> str:
+        pass
+
+    def _struct_fmt_full(self) -> str:
+        return f"{self.endian}{self._struct_fmt()}"
+
+    def pack(self) -> bytes:
+        return pack(self._struct_fmt_full(), map(self.__getattribute__, self._struct_vals()))
+
+    def unpack(self, buf: bytes) -> None:
+        vals = self._struct_vals()
+        for i, val in enumerate(unpack(self._struct_fmt_full(), buf)):
+            self.__setattr__(vals[i], val)
