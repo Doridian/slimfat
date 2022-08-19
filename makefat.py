@@ -1,8 +1,8 @@
 from io import SEEK_SET
 from os import stat
 
-from fatbin_structs import FatArchStruct, FatHeaderStruct
-from mach_structs import MachHeaderBegin
+from structs_fat import FatArchStruct, FatHeaderStruct
+from structs_mach import MachHeaderBegin
 from util import align_int
 
 def make_fat(output: str, input: list[str]):
