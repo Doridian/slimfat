@@ -1,6 +1,6 @@
 from sys import argv
 
-from makefat import make_fat
+from slimfat.makefat import make_fat
 
 
 def main():
