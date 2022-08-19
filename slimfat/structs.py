@@ -6,12 +6,12 @@ class CStruct():
 
     VALID_ENDIAN = ["<", ">"]
 
-    def __init__(self, endian: str, **kwargs) -> None:
+    def __init__(self, endian: str = ">", **kwargs) -> None:
         if endian not in self.VALID_ENDIAN:
             raise ValueError("Invalid endianness")
         self.endian = endian
 
-        for k, v in kwargs:
+        for k, v in kwargs.items():
             self.__setattr__(k, v)
 
     @abstractmethod
@@ -26,7 +26,7 @@ class CStruct():
         return f"{self.endian}{self._struct_fmt()}"
 
     def pack(self) -> bytes:
-        return pack(self._struct_fmt_full(), map(self.__getattribute__, self._struct_vals()))
+        return pack(self._struct_fmt_full(), *map(self.__getattribute__, self._struct_vals()))
 
     def unpack(self, buf: bytes) -> None:
         vals = self._struct_vals()

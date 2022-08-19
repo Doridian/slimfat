@@ -25,7 +25,8 @@ def make_fat(output: str, input: list):
             with open(bin, "rb") as binf:
                 buf = binf.read(MachHeaderBegin.packsize())
 
-            machHdr = MachHeaderBegin(buf)
+            machHdr = MachHeaderBegin()
+            machHdr.unpack(buf)
 
             hdr = HeaderCls(endian=endian, cputype=machHdr.cputype, cpusubtype=machHdr.cpusubtype, offset=offset, size=fstat.st_size, align=align)
 
