@@ -1,9 +1,9 @@
 from io import SEEK_SET
 from os import stat
 
-from structs_fat import FatArchStruct, FatHeaderStruct
-from structs_mach import MachHeaderBegin
-from util import align_int
+from slimfat.structs_fat import FatArchStruct, FatHeaderStruct
+from slimfat.structs_mach import MachHeaderBegin
+from slimfat.util import align_int
 
 def make_fat(output: str, input: list[str]):
     HeaderCls = FatArchStruct

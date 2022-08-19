@@ -1,2 +1,2 @@
-from makefat import make_fat
-__version__ = "1.0.0"
+from slimfat.makefat import make_fat
+__version__ = "1.0.1"
