@@ -1,4 +1,3 @@
-from re import X
 from slimfat.structs import CStruct
 
 
