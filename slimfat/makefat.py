@@ -1,6 +1,5 @@
 from io import SEEK_SET
 from os import stat
-
 from slimfat.structs_fat import FatArchStruct, FatHeaderStruct
 from slimfat.structs_mach import MachHeaderBegin
 from slimfat.util import align_int, executable_opener

@@ -1,6 +1,5 @@
 from slimfat.structs import CStruct
 
-
 # Definitions in mach-o/fat.h
 class FatHeaderStruct(CStruct):
     magic: bytes
@@ -44,7 +43,6 @@ class FatArchStruct(FatArchStructBase):
 
     def _struct_fmt(self) -> str:
         return f"{super()._struct_fmt()}III"
-
 
 # This class does not seem to work, but it is exactly as defined to my knowledge...
 # objdump, however, recognizes it, so I assume it just isn't implemented just yet

@@ -1,6 +1,5 @@
 from slimfat.structs import CStruct
 
-
 # Defined in mach-o/loader.h
 class MachHeaderBegin(CStruct):
     magic: int
