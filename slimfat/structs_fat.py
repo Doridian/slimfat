@@ -34,9 +34,6 @@ class FatArchStructBase(CStruct):
         return "ii"
 
 class FatArchStruct(FatArchStructBase):
-    def __init__(self, **kwargs) -> None:
-        super().__init__(fmt="III", **kwargs)
-
     @staticmethod
     def packsize() -> int:
         return FatArchStructBase.packsize() + 4 + 4 + 4
